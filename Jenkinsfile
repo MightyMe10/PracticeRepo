@@ -19,6 +19,13 @@ echo 'Deploying....'
 // Here you can define commands for your deployment
 }
 }
+stage('Post')
+  always {
+      echo 'Post build condition running'    
+  }
+  failure {
+      echo 'Post action if build failed'    
+  }
 
 }
 }
