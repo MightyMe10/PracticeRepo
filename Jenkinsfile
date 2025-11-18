@@ -1,10 +1,16 @@
 pipeline {
     agent any
     
-    // 1. The 'tools' block tells Jenkins to auto-install/use specific software.
-    // The name 'Maven3' MUST match what you configure in step 2 below.
-    tools {
-        maven 'Maven3' 
+    // 1. Parameters Block (Inputs you give before the build starts)
+    parameters {
+        // String input
+        string(name: 'VERSION_TAG', defaultValue: '', description: 'Manual version tag')
+        
+        // Dropdown choice input
+        choice(name: 'VERSION_CHOICE', choices: ['1.1.0', '1.2.0', '1.3.0'], description: 'Select version')
+        
+        // Boolean checkbox (True/False)
+        booleanParam(name: 'executeTests', defaultValue: true, description: 'Uncheck to skip tests')
     }
 
     environment {
@@ -15,18 +21,24 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building version ${NEW_VERSION} on Windows..."
+                echo "User selected choice: ${params.VERSION_CHOICE}"
                 
-                // 2. Use 'bat' for Windows (Linux uses 'sh')
-                // 'mvn clean install' compiles the code and packages it
-                bat 'mvn clean install' 
+                // Maven command removed as requested
+                bat 'dir' 
             }
         }
+
         stage('Test') {
+            // 2. The 'when' block determines if this stage runs
+            when {
+                expression { return params.executeTests }
+            }
             steps {
-                echo 'Testing..'
-                // Example: bat 'mvn test'
+                echo 'Testing Project...'
+                echo 'This only runs if the checkbox was checked!'
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
