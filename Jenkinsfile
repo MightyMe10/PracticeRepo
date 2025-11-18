@@ -1,31 +1,36 @@
 pipeline {
     agent any
+
+    // 1. Define environment variables here
+    environment {
+        NEW_VERSION = '1.3.0'
+    }
     
     stages {
         stage('Build') {
             steps {
                 echo 'Building..'
-                // Here you can define commands for your build
+                
+                // 2. Using the variable. 
+                // IMPORTANT: You must use double quotes " " for variables to work.
+                echo "Building version ${NEW_VERSION}" 
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                // Here you can define commands for your tests
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                // Here you can define commands for your deployment
             }
         }
     }
     
-    // The 'post' block defines actions to run at the end of the pipeline
     post { 
         always {
-            echo 'Post build condition running - Always runs regardless of status'   
+            echo 'Post build condition running'   
         }
         failure {
             echo 'Post action if build failed'   
