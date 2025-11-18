@@ -19,7 +19,7 @@ echo 'Deploying....'
 // Here you can define commands for your deployment
 }
 }
-stage('Post')
+stage('Post'){
   always {
       echo 'Post build condition running'    
   }
