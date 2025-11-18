@@ -1,7 +1,12 @@
 pipeline {
     agent any
+    
+    // 1. The 'tools' block tells Jenkins to auto-install/use specific software.
+    // The name 'Maven3' MUST match what you configure in step 2 below.
+    tools {
+        maven 'Maven3' 
+    }
 
-    // 1. Define environment variables here
     environment {
         NEW_VERSION = '1.3.0'
     }
@@ -9,16 +14,17 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo "Building version ${NEW_VERSION} on Windows..."
                 
-                // 2. Using the variable. 
-                // IMPORTANT: You must use double quotes " " for variables to work.
-                echo "Building version ${NEW_VERSION}" 
+                // 2. Use 'bat' for Windows (Linux uses 'sh')
+                // 'mvn clean install' compiles the code and packages it
+                bat 'mvn clean install' 
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
+                // Example: bat 'mvn test'
             }
         }
         stage('Deploy') {
