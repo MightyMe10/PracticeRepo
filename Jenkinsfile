@@ -6,9 +6,9 @@ pipeline {
         SONAR_SCANNER_NAME = 'sonar_scanner'
         SONAR_SERVER_NAME = 'SonarQube'
 
-        // SonarQube Project Identification (DEFINE YOUR OWN VALUES HERE)
-        SONAR_PROJECT_KEY  = 'ssd-lab12'
-        SONAR_PROJECT_NAME = 'ssd flask app lab12'
+        // SonarQube Project Identification (*** UPDATE THESE VALUES ***)
+        SONAR_PROJECT_KEY  = 'my-java-app-key'
+        SONAR_PROJECT_NAME = 'My Java App'
 
         // Existing variable (kept for context)
         NEW_VERSION = '1.3.0'
@@ -18,19 +18,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building version ${NEW_VERSION} on Windows..."
-                // Replace this with your actual build command (e.g., Maven, Gradle)
+                // Placeholder build command: replace with your actual build command (e.g., mvn clean install)
                 bat 'echo Running Build Step...'
             }
         }
 
         stage('SonarQube Analysis') {
-            // The withSonarQubeEnv step securely passes the server URL and token
-            withSonarQubeEnv(SONAR_SERVER_NAME) {
-                steps {
+            steps { // <--- CORRECTED: 'withSonarQubeEnv' must be inside 'steps'
+                // The withSonarQubeEnv step securely passes the server URL and token
+                withSonarQubeEnv(SONAR_SERVER_NAME) {
                     echo "Starting SonarQube Analysis for project ${env.SONAR_PROJECT_NAME}..."
                     
                     // Execute the SonarScanner tool using the configured tool name.
-                    // The properties define the key and name in SonarQube.
+                    // The properties define the key, name, and sources for SonarQube.
                     bat "${SONAR_SCANNER_NAME}\\bin\\sonar-scanner " + 
                         "-Dsonar.projectKey=${SONAR_PROJECT_KEY} " + 
                         "-Dsonar.projectName=${SONAR_PROJECT_NAME} " + 
@@ -40,8 +40,8 @@ pipeline {
         }
 
         stage('Quality Gate Check') {
-            // Wait for the analysis report to be processed by SonarQube.
-            steps {
+            steps { // <--- CORRECTED: steps must be inside 'steps'
+                // Wait for the analysis report to be processed by SonarQube.
                 timeout(time: 30, unit: 'MINUTES') {
                     // This step polls the SonarQube server and fails the Jenkins build
                     // if the project fails its Quality Gate.
