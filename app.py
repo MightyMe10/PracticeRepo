@@ -3,6 +3,10 @@ import sqlite3
 
 app = Flask(__name__)
 
+
+def dummyfunc():
+    print("This is a dummy function. Made to show the changes in the codebase in Repo 1")
+
 # Initialize database
 def init_db():
     conn = sqlite3.connect('tasks.db')
