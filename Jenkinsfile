@@ -23,6 +23,23 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Use the tool name you configured in Jenkins: 'sonar_scanner'
+                    def scannerHome = tool 'sonar_scanner'
+                    
+                    // 'SonarQube' is the default name for the server configuration in Jenkins > Configure System.
+                    // If you named it something else (like 'MySonar'), change it here.
+                    withSonarQubeEnv('SonarQube') {
+                        // Run the scanner executable.
+                        // On Windows, the binary is usually inside 'bin' folder.
+                        bat "\"${scannerHome}/bin/sonar-scanner\""
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             // Only run this stage if you have Docker installed
             steps {
