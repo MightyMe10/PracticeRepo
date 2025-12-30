@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+.pytest_cache/
+dep_sim/
+dist/
+deployment/
+venv/
+.env
